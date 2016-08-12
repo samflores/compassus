@@ -1,9 +1,9 @@
-(def +version+ "0.2.1")
+(def +version+ "0.2.2")
 
 (set-env!
  :source-paths    #{"src/main"}
  :resource-paths  #{"resources"}
- :dependencies '[[org.clojure/clojurescript   "1.9.93"         :scope "provided"]
+ :dependencies '[[org.clojure/clojurescript   "1.9.89"         :scope "provided"]
                  [org.omcljs/om               "1.0.0-alpha40"  :scope "provided"]
                  [com.ladderlife/cellophane   "0.3.4"          :scope "provided"]
                  [com.cognitect/transit-clj   "0.8.285"        :scope "test"]

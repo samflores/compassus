@@ -526,6 +526,26 @@
       (is (contains? @r ::c/route))
       (is (contains? @r :random/key)))))
 
+(defui WrapperWithQuery
+  static om/IQuery
+  (query [this]
+         [:wrapper/data]))
+
+(deftest test-wrapper-with-query
+  (testing "wrapper with query"
+    (let [app (c/application {:routes {:index (c/index-route Home)}
+                              :wrapper (om/factory WrapperWithQuery)
+                              :reconciler-opts
+                              {:state (atom init-state)
+                               :parser (om/parser {:read app-read})}})
+          r (c/get-reconciler app)
+          p (-> r :config :parser)]
+      (c/mount! app nil)
+      (is (= (c/current-route app) :index))
+      (is (= (om/get-query (c/root-class app))
+             [::c/route {::c/route-data {:index [:home/title :home/content :wrapper/data]}}]))
+      )))
+
 (defui StaticRoute)
 
 (deftest test-routes-without-query

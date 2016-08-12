@@ -25,11 +25,27 @@
                        routes)
         route->factory (zipmap (keys routes)
                                (map om/factory (vals routes)))
+        default-query [::route {::route-data route->query}]
+        query (if-not wrapper
+                default-query
+                (let [c (wrapper)
+                      class (om/react-type c)]
+                  (if-not (om/iquery? class)
+                    default-query
+                    (let [wrapper-query (om/get-query class)]
+                      (reduce
+                        (fn [query [route]]
+                          (update-in query
+                                     [1 ::route-data route]
+                                     (comp (partial into []) concat)
+                                     wrapper-query))
+                        default-query
+                        routes)))))
         {:keys [setup teardown]} history]
     (ui
       static om/IQuery
       (query [this]
-        [::route {::route-data route->query}])
+        query)
       Object
       (componentDidMount [this]
         (when setup
